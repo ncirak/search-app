@@ -10,10 +10,10 @@ import java.util.List;
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
 
-    @Query(value = "SELECT * FROM company WHERE to_tsvector('english', name || ' ' || description || ' ' || address) @@ to_tsquery('english', :searchTerm || ':*') " +
-            "ORDER BY ts_rank(to_tsvector('english', name || ' ' || description || ' ' || address), to_tsquery('english', :searchTerm || ':*')) DESC",
+    //concat(regexp_replace(trim(:searchTerm), '\W+', ':* & '), ':*')
+    @Query(value = "SELECT * FROM company WHERE to_tsvector('english', name || ' ' || description || ' ' || address) @@ to_tsquery('english', concat(regexp_replace(trim(:searchTerm), '\\W+', ':* & '), ':*') ) " +
+            "ORDER BY ts_rank(to_tsvector('english', name || ' ' || description || ' ' || address), to_tsquery('english', concat(regexp_replace(trim(:searchTerm), '\\W+', ':* & '), ':*') )) DESC",
             nativeQuery = true)
-
     List<Company> findAllBySearchTermByOrderByRelevanceDesc(String searchTerm);
 
 }

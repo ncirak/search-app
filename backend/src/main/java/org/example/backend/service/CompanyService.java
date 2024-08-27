@@ -1,5 +1,6 @@
 package org.example.backend.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.backend.exception.InvalidSearchTermException;
 import org.example.backend.model.entity.Company;
 import org.example.backend.repository.CompanyRepository;
@@ -7,8 +8,11 @@ import org.example.backend.validator.CompanyValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class CompanyService {
 
@@ -37,6 +41,8 @@ public class CompanyService {
         if (searchTerm == null || searchTerm.isEmpty()) {
             throw new InvalidSearchTermException("Search term can not be empty", new Exception());
         }
+
+        log.info("Search term after manipulation: {}" , searchTerm);
         return companyRepository.findAllBySearchTermByOrderByRelevanceDesc(searchTerm);
     }
 }
