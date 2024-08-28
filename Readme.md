@@ -37,10 +37,15 @@ docker-compose up --build
 
 
 ## In Progress Features
+
 [ ] - Faster search results using index on the database 
+
 [ ] - Pagination for search results
+
 [ ] - Add more data to the dataset
+
 [ ] - For medium to large datasets, implement a caching mechanism to improve search performance
+
 
 
 

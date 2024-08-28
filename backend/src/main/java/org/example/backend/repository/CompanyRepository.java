@@ -14,7 +14,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 //    @Query(value = "SELECT * FROM company WHERE to_tsvector('english', name || ' ' || description || ' ' || address) @@ websearch_to_tsquery('english', :searchTerm) " +
 //            "ORDER BY ts_rank(to_tsvector('english', name || ' ' || description || ' ' || address), websearch_to_tsquery('english', :searchTerm ))  DESC",
 //            nativeQuery = true)
- 
+
     @Query(value = "SELECT * FROM company " +
             "WHERE to_tsvector('english', name || ' ' || description || ' ' || address) @@ " +
             "replace(websearch_to_tsquery('english', :searchTerm)::text || ' ', ''' ', ''':*')::tsquery " +
