@@ -4,7 +4,7 @@ import { searchCompany } from '../service/search-api';
 const CompanySearch = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [companies, setCompanies] = useState([]);
-    const [error, setError] = useState('');
+    const [errorMessage, setErrorMessage] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const [showHelp, setShowHelp] = useState(false);
@@ -17,8 +17,9 @@ const CompanySearch = () => {
             setCompanies(companies);
             setLoading(false);
         } catch (error) {
-            setError(error.message);
-            console.log(error);
+            setErrorMessage(error.response.data.message);
+            console.log("errorMessage" + errorMessage);
+            console.log(errorMessage);
         }
     };
 
@@ -33,6 +34,7 @@ const CompanySearch = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder="Enter search term"
                         className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
                     />
                     <button
                         type="submit"
@@ -56,16 +58,16 @@ const CompanySearch = () => {
                     <h3 className="font-bold text-lg mb-2">Search Help</h3>
                     <p className="mb-2">You can use the following operators in your search:</p>
                     <ul className="list-disc list-inside space-y-1">
-                        <li><span className="font-mono bg-gray-200 px-1 rounded">|</span> (OR): Search for either term. Example: <span className="font-mono bg-gray-200 px-1 rounded">apple | orange</span></li>
-                        <li><span className="font-mono bg-gray-200 px-1 rounded">&</span> (AND): Search for both terms. Example: <span className="font-mono bg-gray-200 px-1 rounded">apple & orange</span></li>
-                        <li><span className="font-mono bg-gray-200 px-1 rounded">!</span> (NOT): Exclude a term. Example: <span className="font-mono bg-gray-200 px-1 rounded"> !orange </span></li>
+                        <li><span className="font-mono bg-gray-200 px-1 rounded">OR</span> : Search for either term. Example: <span className="font-mono bg-gray-200 px-1 rounded">apple or orange</span></li>
+                        <li><span className="font-mono bg-gray-200 px-1 rounded">&apos;&apos;</span> : Search for terms in given order. Example: <span className="font-mono bg-gray-200 px-1 rounded">&apos;apple  orange&apos;</span></li>
+                        <li><span className="font-mono bg-gray-200 px-1 rounded">-</span> : Exclude a term. Example: <span className="font-mono bg-gray-200 px-1 rounded"> apple -orange </span></li>
                     </ul>
                     <p className="mt-2 text-sm text-gray-600">You can combine these operators for more complex searches.</p>
                 </div>
             )}
-            {error && <p className="text-red-500 mb-4">{error}</p>}
+            {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
 
-            {companies.length > 0 && (
+            {companies != null && companies.length > 0 && (
                 <div className="overflow-x-auto">
                     <table className="min-w-full bg-white">
                         <thead className="bg-gray-100">
@@ -94,8 +96,8 @@ const CompanySearch = () => {
                 </div>
             )}
 
-            {companies.length === 0 && !loading && !error && (
-                <p className="text-gray-500 text-center">No companies found. Try a different search term.</p>
+            {!loading && !errorMessage && companies.length === 0 && (
+                <p className="text-gray-500 text-center">No company found. Try a different search term.</p>
             )}
         </div>
     );

@@ -27,4 +27,8 @@ public class Company {
 
     @Column(name = "address", length = 256)
     private String address;
+
+//    @Column(name = "search_vector", columnDefinition = "tsvector")
+//    private String searchVector;
 }
+

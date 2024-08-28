@@ -10,9 +10,16 @@ import java.util.List;
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
 
-    //concat(regexp_replace(trim(:searchTerm), '\W+', ':* & '), ':*')
-    @Query(value = "SELECT * FROM company WHERE to_tsvector('english', name || ' ' || description || ' ' || address) @@ to_tsquery('english', concat(regexp_replace(trim(:searchTerm), '\\W+', ':* & '), ':*') ) " +
-            "ORDER BY ts_rank(to_tsvector('english', name || ' ' || description || ' ' || address), to_tsquery('english', concat(regexp_replace(trim(:searchTerm), '\\W+', ':* & '), ':*') )) DESC",
+//
+//    @Query(value = "SELECT * FROM company WHERE to_tsvector('english', name || ' ' || description || ' ' || address) @@ websearch_to_tsquery('english', :searchTerm) " +
+//            "ORDER BY ts_rank(to_tsvector('english', name || ' ' || description || ' ' || address), websearch_to_tsquery('english', :searchTerm ))  DESC",
+//            nativeQuery = true)
+ 
+    @Query(value = "SELECT * FROM company " +
+            "WHERE to_tsvector('english', name || ' ' || description || ' ' || address) @@ " +
+            "replace(websearch_to_tsquery('english', :searchTerm)::text || ' ', ''' ', ''':*')::tsquery " +
+            "ORDER BY ts_rank(to_tsvector('english', name || ' ' || description || ' ' || address), " +
+            "replace(websearch_to_tsquery('english', :searchTerm)::text || ' ', ''' ', ''':*')::tsquery) DESC",
             nativeQuery = true)
     List<Company> findAllBySearchTermByOrderByRelevanceDesc(String searchTerm);
 

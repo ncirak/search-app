@@ -1,0 +1,20 @@
+-- DROP SCHEMA IF EXISTS company;
+CREATE SCHEMA IF NOT EXISTS company;
+
+
+DROP TABLE IF EXISTS "company"."company";
+
+CREATE TABLE IF NOT EXISTS "company"."company" (
+    id BIGINT  PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    description VARCHAR(1024),
+    address VARCHAR(256),
+    CONSTRAINT unique_company_name UNIQUE (name)
+);
+
+ALTER TABLE "company"."company" ADD COLUMN search_vector tsvector;
+
+UPDATE "company"."company" SET search_vector = to_tsvector('english', name || ' ' || description || ' ' || address);
+
+
+CREATE INDEX company_search_vector_idx ON "company"."company"  USING gin(search_vector);

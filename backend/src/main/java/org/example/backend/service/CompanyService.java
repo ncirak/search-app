@@ -8,9 +8,7 @@ import org.example.backend.validator.CompanyValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -42,7 +40,7 @@ public class CompanyService {
             throw new InvalidSearchTermException("Search term can not be empty", new Exception());
         }
 
-        log.info("Search term after manipulation: {}" , searchTerm);
         return companyRepository.findAllBySearchTermByOrderByRelevanceDesc(searchTerm);
     }
+
 }
